@@ -1,9 +1,14 @@
 
 //play点击事件
 function play() {
-	var rul = document.getElementById("url").value; //获取input链接
-	if(rul == "") {
-		alert("北漂鱼提示您：请输入链接，没连接我给你解析个毛线")
+	var rul = document.getElementById("url").value.trim(); //获取input链接
+	if(rul === "") {
+		alert("北漂鱼提示您：请输入链接，没连接我给你解析个毛线");
+		return;
+	}
+	if(!/^https?:\/\//i.test(rul)) {
+		alert("北漂鱼提示您：请输入以 http 或 https 开头的链接");
+		return;
 	} else {
 		var jxApi = document.getElementById("jk"); //获取选择按钮
 		var jxurl = document.getElementById("jk").selectedIndex; //获取选中的
@@ -18,14 +23,14 @@ function play() {
 		xhr.open("post", "data/title.php", true);
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		//3,发送一个http请求:
-		xhr.send("titurl=" + rul);
+		xhr.send("titurl=" + encodeURIComponent(rul));
 		console.log(xhr.readyState);
 		//获取服务器状态码
 		xhr.onreadystatechange = function() {
 			console.log(xhr.readyState)
 			console.log(xhr.status)
 			if(xhr.readyState == 4 && xhr.status == 200) {
-				tittext.innerHTML = xhr.responseText; //获取服务器响应数据
+				tittext.textContent = xhr.responseText; //获取服务器响应数据
 			}
 		}
 
@@ -40,6 +45,18 @@ function play() {
 		}
 	}
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+	var urlInput = document.getElementById("url");
+	if(urlInput) {
+		urlInput.addEventListener("keydown", function(event) {
+			if(event.key === "Enter") {
+				event.preventDefault();
+				play();
+			}
+		});
+	}
+});
 
 function banquan() {
 	var htmlzs = "PCEtLQpIb37jgIDimIXimIXimIXimIXimIXimIUK44CA44CA4peL4piF4piF4piF4piF4piF4piF4piF4peLICAK44CA44CA4piF4piF44CA44CA44CAIOOAgOKYheKYhSAgCuOAgOKYheKYheOAgOKIqeOAgOOAgOKIqeOAgCDimIXimIUgIArjgIDimIXimIXjgIDjgIDjgIDil4/jgIAg44CA4piF4piFICAK44CA4piF4piF44CA44CA44CA44CA44CA44CA4piF4piFICAK44CA44CA4piF4piF44CA44CA44CA44CA4piF4piFICAK44CA44CA44CA44CA4piF4piF4piF4piF44CA44CA44CA4pei4pekICAK44CA44CA4pWt44CA44Ch44Ch44Ch44Ch44CA4pWu4pWxICAK44CA44CA44CA4oCU4pSY4oCU4pSY4pSU4oCU4pSU4oCUCgnnvJblhpnvvJpCZWlweShodHRwOi8vd3d3LmJlaXB5LmNvbSkKCeeJiOadg+W9kuWxnu+8muWMl+a8gumxvAkKCeaPj+i/sO+8mkJlaXB5VGhlbWXkuLvpopjjgIIKCeaJgOacieS7o+eggeWdh+eLrOeri+e8luWGme+8jOiwoue7neS4gOWIh+W9ouW8j+eahOebl+ermeihjOS4uu+8ge+8gQotLT4="
